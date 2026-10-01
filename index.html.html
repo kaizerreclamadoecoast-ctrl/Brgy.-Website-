@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Barangay Service Request</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --paper:#F6F2E7;
+    --paper-dark:#EDE6D4;
+    --ink:#211C14;
+    --green:#1F4D3A;
+    --green-dark:#153529;
+    --gold:#B8863C;
+    --clay:#A6472F;
+    --line:#D8CFB8;
+    --white:#FFFDF8;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+  }
+
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    margin:0;
+  }
+
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px;}
+
+  /* Masthead */
+  .masthead{
+    border-bottom:3px solid var(--ink);
+    padding:28px 0 18px;
+  }
+  .masthead-row{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .seal{
+    width:56px;height:56px;flex-shrink:0;
+  }
+  .masthead-text{flex:1;}
+  .masthead-eyebrow{
+    font-size:13px;
+    letter-spacing:.02em;
+    color:var(--green-dark);
+    margin-bottom:2px;
+  }
+  .masthead h1{
+    font-size:28px;
+    color:var(--ink);
+  }
+  .masthead-sub{
+    font-size:14px;
+    color:#5C5340;
+    margin-top:4px;
+  }
+
+  /* Hero */
+  .hero{
+    padding:40px 0 32px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero h2{
+    font-size:34px;
+    line-height:1.15;
+    max-width:560px;
+    color:var(--green-dark);
+  }
+  .hero p{
+    max-width:520px;
+    font-size:16px;
+    color:#4A4433;
+    margin-top:14px;
+  }
+
+  /* Tabs */
+  .tabs{
+    display:flex;
+    gap:4px;
+    margin:32px 0 0;
+    border-bottom:1px solid var(--line);
+  }
+  .tab-btn{
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    padding:12px 18px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:#8A7F63;
+    border-bottom:3px solid transparent;
+    margin-bottom:-1px;
+  }
+  .tab-btn.active{
+    color:var(--green-dark);
+    border-bottom-color:var(--gold);
+  }
+
+  .panel{display:none;padding:32px 0 64px;}
+  .panel.active{display:block;}
+
+  /* Form */
+  .form-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:32px;
+  }
+  .field-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  .field{margin-bottom:18px;}
+  label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:var(--green-dark);
+    margin-bottom:6px;
+  }
+  input, select, textarea{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  input:focus, select:focus, textarea:focus{
+    outline:2px solid var(--gold);
+    outline-offset:1px;
+    background:var(--white);
+  }
+  textarea{resize:vertical;min-height:80px;}
+
+  .submit-btn{
+    background:var(--green);
+    color:var(--white);
+    border:none;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    padding:13px 26px;
+    border-radius:3px;
+    cursor:pointer;
+    margin-top:6px;
+  }
+  .submit-btn:hover{background:var(--green-dark);}
+  .submit-btn:disabled{background:#B8B29E;cursor:not-allowed;}
+
+  .confirm-box{
+    display:none;
+    background:var(--green-dark);
+    color:var(--white);
+    padding:22px 26px;
+    border-radius:4px;
+    margin-bottom:24px;
+  }
+  .confirm-box.show{display:block;}
+  #errorBox{font-size:14px;line-height:1.4;}
+  .confirm-ref{
+    font-family:'Fraunces',serif;
+    font-size:22px;
+    margin:6px 0 4px;
+  }
+  .confirm-box p{margin:0;font-size:14px;opacity:.9;}
+
+  /* Ledger */
+  .ledger-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .staff-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:#5C5340;
+  }
+  .staff-toggle input{width:auto;}
+
+  .ledger{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--white);
+    border:1px solid var(--line);
+  }
+  .ledger th{
+    text-align:left;
+    font-size:12px;
+    font-weight:600;
+    color:#8A7F63;
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  .ledger td{
+    padding:12px 14px;
+    font-size:14px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  .ledger tr:last-child td{border-bottom:none;}
+  .ref-cell{font-family:'Fraunces',serif;font-weight:600;color:var(--green-dark);}
+
+  .badge{
+    display:inline-block;
+    font-size:12px;
+    font-weight:600;
+    padding:3px 10px;
+    border-radius:20px;
+  }
+  .badge-pending{background:#F4E4C1;color:#7A5A18;}
+  .badge-processing{background:#DCE7F2;color:#2A5580;}
+  .badge-ready{background:#DCEEE1;color:var(--green-dark);}
+  .badge-released{background:#E6E1D2;color:#6B6349;}
+
+  .advance-btn{
+    background:none;
+    border:1px solid var(--green);
+    color:var(--green-dark);
+    font-size:12px;
+    font-weight:600;
+    padding:5px 10px;
+    border-radius:3px;
+    cursor:pointer;
+  }
+  .advance-btn:hover{background:var(--green);color:var(--white);}
+
+  .empty-state{
+    text-align:center;
+    padding:48px 20px;
+    color:#8A7F63;
+    background:var(--white);
+    border:1px dashed var(--line);
+  }
+  .empty-state p{margin:6px 0 0;font-size:14px;}
+
+  .loading-row{padding:20px;text-align:center;color:#8A7F63;font-size:14px;}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:20px 0 40px;
+    font-size:12px;
+    color:#8A7F63;
+  }
+
+  @media(max-width:640px){
+    .field-row{grid-template-columns:1fr;}
+    .hero h2{font-size:27px;}
+    .ledger{font-size:13px;}
+    .ledger th:nth-child(2), .ledger td:nth-child(2){display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="wrap masthead-row">
+    <svg class="seal" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="26" fill="none" stroke="#1F4D3A" stroke-width="2"/>
+      <circle cx="28" cy="28" r="19" fill="none" stroke="#B8863C" stroke-width="1.5"/>
+      <path d="M28 14 L34 24 L28 20 L22 24 Z" fill="#1F4D3A"/>
+      <rect x="20" y="26" width="16" height="12" fill="none" stroke="#1F4D3A" stroke-width="1.5"/>
+      <line x1="20" y1="32" x2="36" y2="32" stroke="#1F4D3A" stroke-width="1"/>
+    </svg>
+    <div class="masthead-text">
+      <div class="masthead-eyebrow">Office of the Barangay Sta. Maria Umingan, Pangasinan</div>
+      <h1>Barangay Service Request</h1>
+      <div class="masthead-sub">Request documents and report concerns without lining up at the hall.</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap hero">
+  <h2>Ask the barangay for what you need — track it until it's ready.</h2>
+  <p>Fill out one form for clearances, certificates, permit endorsements, or a concern you'd like reported. Every request gets a reference number you can check on the tracking page below.</p>
+</div>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="request">Submit a Request</button>
+    <button class="tab-btn" data-tab="track">Track Requests</button>
+  </div>
+
+  <!-- SUBMIT PANEL -->
+  <div class="panel active" id="panel-request">
+    <div class="confirm-box" id="confirmBox">
+      <p>Request received. Show this reference number when you follow up.</p>
+      <div class="confirm-ref" id="confirmRef"></div>
+      <p id="confirmService"></p>
+    </div>
+    <div class="confirm-box" id="errorBox" style="background:#7A2E1F;"></div>
+
+    <div class="form-card">
+      <form id="requestForm">
+        <div class="field-row">
+          <div class="field">
+            <label for="fullName">Full name</label>
+            <input type="text" id="fullName" required />
+          </div>
+          <div class="field">
+            <label for="contact">Contact number</label>
+            <input type="tel" id="contact" required placeholder="09XX XXX XXXX"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="address">Address</label>
+          <input type="text" id="address" required placeholder="House no., Purok, Street"/>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="service">Service needed</label>
+            <select id="service" required>
+              <option value="" disabled selected>Select a service</option>
+              <option>Barangay Clearance</option>
+              <option>Certificate of Indigency</option>
+              <option>Certificate of Residency</option>
+              <option>Business Permit Endorsement</option>
+              <option>Barangay ID</option>
+              <option>Report a Concern / Complaint</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="purpose">Purpose (if applicable)</label>
+            <input type="text" id="purpose" placeholder="e.g. Job application, school requirement"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="details">Details</label>
+          <textarea id="details" placeholder="Add anything the barangay staff should know" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Submit request</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TRACK PANEL -->
+  <div class="panel" id="panel-track">
+    <div class="ledger-toolbar">
+      <h3 style="font-size:18px;">Request Ledger</h3>
+      <label class="staff-toggle">
+        <input type="checkbox" id="staffMode"/> Staff view (update status)
+      </label>
+    </div>
+    <div id="ledgerWrap">
+      <div class="loading-row">Loading requests…</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <footer>Demo system — requests are stored for this artifact only and are visible to anyone using it.</footer>
+</div>
+
+<script>
+const STATUS_FLOW = ["Pending", "Processing", "Ready for pickup", "Released"];
+const STATUS_CLASS = {
+  "Pending":"badge-pending",
+  "Processing":"badge-processing",
+  "Ready for pickup":"badge-ready",
+  "Released":"badge-released"
+};
+
+const form = document.getElementById('requestForm');
+const submitBtn = document.getElementById('submitBtn');
+const confirmBox = document.getElementById('confirmBox');
+const confirmRef = document.getElementById('confirmRef');
+const confirmService = document.getElementById('confirmService');
+const errorBox = document.getElementById('errorBox');
+
+function showError(message){
+  console.error('[Barangay form]', message);
+  errorBox.textContent = message;
+  errorBox.classList.add('show');
+  confirmBox.classList.remove('show');
+}
+
+function clearError(){
+  errorBox.classList.remove('show');
+  errorBox.textContent = '';
+}
+const ledgerWrap = document.getElementById('ledgerWrap');
+const staffMode = document.getElementById('staffMode');
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab === 'track') loadLedger();
+  });
+});
+
+staffMode.addEventListener('change', loadLedger);
+
+// --- FIXED: reference number generation ---
+// window.storage.get() throws when a key does not exist yet (it does NOT
+// return null). The original code assumed it would return null, so on the
+// very first request ever (and every request after, since the counter key
+// never got created) it silently fell into a random-number fallback that
+// never persisted the counter. Random 4-digit refs can collide, and a
+// collision would silently overwrite an earlier person's request.
+//
+// This version treats a missing counter as "start at 0", always persists
+// the incremented counter, and double-checks that the generated reference
+// isn't already in use before handing it out.
+
+async function getCounter(){
+  try{
+    const res = await window.storage.get('brgy:counter', true);
+    return res ? parseInt(res.value, 10) || 0 : 0;
+  }catch(err){
+    // Key doesn't exist yet — this is the normal "first ever request" case.
+    return 0;
+  }
+}
+
+async function refExists(ref){
+  try{
+    const item = await window.storage.get('brgy:req:' + ref, true);
+    return !!item;
+  }catch(err){
+    return false;
+  }
+}
+
+async function nextRefNumber(){
+  const year = new Date().getFullYear();
+  let n = await getCounter();
+  let ref;
+  let attempts = 0;
+
+  // Advance past any reference that somehow already exists, so a
+  // previously-out-of-sync counter can never overwrite a real request.
+  do{
+    n += 1;
+    ref = `BSR-${year}-${String(n).padStart(4,'0')}`;
+    attempts++;
+  } while (attempts < 100 && await refExists(ref));
+
+  try{
+    await window.storage.set('brgy:counter', String(n), true);
+  }catch(err){
+    console.error('Could not persist request counter:', err);
+  }
+
+  return ref;
+}
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  clearError();
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting…';
+
+  try{
+    if(typeof window.storage === 'undefined'){
+      throw new Error('Storage is not available in this environment (window.storage is undefined).');
+    }
+
+    const record = {
+      ref: await nextRefNumber(),
+      fullName: document.getElementById('fullName').value.trim(),
+      contact: document.getElementById('contact').value.trim(),
+      address: document.getElementById('address').value.trim(),
+      service: document.getElementById('service').value,
+      purpose: document.getElementById('purpose').value.trim(),
+      details: document.getElementById('details').value.trim(),
+      status: "Pending",
+      submittedAt: new Date().toISOString()
+    };
+
+    await window.storage.set('brgy:req:' + record.ref, JSON.stringify(record), true);
+    confirmRef.textContent = record.ref;
+    confirmService.textContent = record.service + ' — keep this number to track your request.';
+    confirmBox.classList.add('show');
+    form.reset();
+  }catch(err){
+    showError('Could not save your request: ' + (err && err.message ? err.message : err));
+  }finally{
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit request';
+  }
+});
+
+async function loadLedger(){
+  ledgerWrap.innerHTML = '<div class="loading-row">Loading requests…</div>';
+  try{
+    const list = await window.storage.list('brgy:req:', true);
+    if(!list || !list.keys || list.keys.length === 0){
+      ledgerWrap.innerHTML = `
+        <div class="empty-state">
+          <strong>No requests yet</strong>
+          <p>Submit one from the "Submit a Request" tab to see it appear here.</p>
+        </div>`;
+      return;
+    }
+
+    const records = [];
+    for(const key of list.keys){
+      try{
+        const item = await window.storage.get(key, true);
+        if(item) records.push(JSON.parse(item.value));
+      }catch(e){ /* skip unreadable entry */ }
+    }
+    records.sort((a,b)=> new Date(b.submittedAt) - new Date(a.submittedAt));
+    renderLedger(records);
+  }catch(err){
+    ledgerWrap.innerHTML = '<div class="loading-row">Could not load requests right now.</div>';
+  }
+}
+
+function renderLedger(records){
+  const isStaff = staffMode.checked;
+  let rows = records.map(r=>{
+    const badgeClass = STATUS_CLASS[r.status] || 'badge-pending';
+    const date = new Date(r.submittedAt).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+    const nextIdx = STATUS_FLOW.indexOf(r.status) + 1;
+    const canAdvance = isStaff && nextIdx < STATUS_FLOW.length;
+    const actionCell = canAdvance
+      ? `<button class="advance-btn" data-ref="${r.ref}" data-next="${STATUS_FLOW[nextIdx]}">Mark "${STATUS_FLOW[nextIdx]}"</button>`
+      : (isStaff ? '—' : '');
+    return `
+      <tr>
+        <td class="ref-cell">${r.ref}</td>
+        <td>${escapeHtml(r.fullName)}</td>
+        <td>${escapeHtml(r.service)}</td>
+        <td>${date}</td>
+        <td><span class="badge ${badgeClass}">${r.status}</span></td>
+        ${isStaff ? `<td>${actionCell}</td>` : ''}
+      </tr>`;
+  }).join('');
+
+  ledgerWrap.innerHTML = `
+    <table class="ledger">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Requester</th>
+          <th>Service</th>
+          <th>Date</th>
+          <th>Status</th>
+          ${isStaff ? '<th>Action</th>' : ''}
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+  if(isStaff){
+    document.querySelectorAll('.advance-btn').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        btn.disabled = true;
+        btn.textContent = 'Updating…';
+        try{
+          const item = await window.storage.get('brgy:req:' + btn.dataset.ref, true);
+          const record = JSON.parse(item.value);
+          record.status = btn.dataset.next;
+          await window.storage.set('brgy:req:' + btn.dataset.ref, JSON.stringify(record), true);
+          loadLedger();
+        }catch(err){
+          console.error('[Barangay ledger] Could not update status:', err);
+          btn.disabled = false;
+          btn.textContent = 'Try again';
+        }
+      });
+    });
+  }
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+loadLedger();
+</script>
+
+</body>
+</html>
